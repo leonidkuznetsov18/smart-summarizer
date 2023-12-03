@@ -1,22 +1,35 @@
-import { useState } from "react"
+import type { PlasmoCSConfig } from 'plasmo';
 
+import { sendToBackground } from '@plasmohq/messaging';
+
+export const config: PlasmoCSConfig = {
+  all_frames: true,
+};
 function IndexPopup() {
-  const [data, setData] = useState("")
-
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 16
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 16,
+        width: '300px',
+        height: '300px',
       }}>
-      <h1>
-        Welcome to your <a href="https://www.plasmo.com">Plasmo</a> Extension!
-      </h1>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <footer>Crafted by @PlamoHQ</footer>
+      <h1>This is smart summarizer extension!</h1>
+      <button
+        onClick={async () => {
+          const res = await sendToBackground({
+            name: 'ping',
+            body: {
+              id: 123,
+            },
+          });
+          console.log('res', res);
+        }}>
+        Ping to background
+      </button>
     </div>
-  )
+  );
 }
 
-export default IndexPopup
+export default IndexPopup;
