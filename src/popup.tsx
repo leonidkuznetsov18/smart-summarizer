@@ -1,11 +1,12 @@
 import type { PlasmoCSConfig } from 'plasmo';
 
-import { sendToBackground } from '@plasmohq/messaging';
+import { usePort } from '@plasmohq/messaging/dist/hook';
 
 export const config: PlasmoCSConfig = {
   all_frames: true,
 };
 function IndexPopup() {
+  const port = usePort('ping');
   return (
     <div
       style={{
@@ -17,17 +18,14 @@ function IndexPopup() {
       }}>
       <h1>This is smart summarizer extension!</h1>
       <button
-        onClick={async () => {
-          const res = await sendToBackground({
-            name: 'ping',
-            body: {
-              id: 123,
-            },
-          });
-          console.log('res', res);
-        }}>
+        onClick={() =>
+          port.send({
+            message: 'ping',
+          })
+        }>
         Ping to background
       </button>
+      <div>Response from background: {port.data?.message}</div>
     </div>
   );
 }
